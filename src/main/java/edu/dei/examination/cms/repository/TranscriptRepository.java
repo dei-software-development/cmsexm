@@ -127,11 +127,6 @@ public class TranscriptRepository {
         		+ "LEFT JOIN student_cgpa sc "
         		+ "    ON sc.roll_number = sp.roll_number "
         		+ "WHERE sp.roll_number = ? AND sp.program_status != 'INC' "
-        		+ "  AND ("
-        		+ "        (isNep = 'Y' AND sc.third_year_cgpa IS NOT NULL AND sc.third_year_cgpa > '0' AND sp.current_semester = 'SM6') "
-        		+ "        OR "
-        		+ "        NOT (isNep = 'Y' AND sc.third_year_cgpa IS NOT NULL AND sc.third_year_cgpa > '0') "
-        		+ "      ) "
         		+ " ORDER BY current_semester DESC  "
         		+ " LIMIT 1" ;
         return cmsJdbcTemplate.queryForObject(query, new Object[]{rollNumber}, String.class);
