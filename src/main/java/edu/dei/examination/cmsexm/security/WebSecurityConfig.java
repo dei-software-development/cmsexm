@@ -162,10 +162,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	            .hasAuthority("PHD_ACCESS")
 
 	        // Examination application APIs
-	        .antMatchers("/cmsexam/exam/api/**")
-	            .hasAuthority("CMSEXAM_ACCESS")
+			.antMatchers("/cmsexam/exam/api/**").permitAll()
+	      //  .antMatchers("/cmsexam/exam/api/**")
+	        //    .hasAuthority("CMSEXAM_ACCESS")
 	            // Deny old application API paths
-	            .antMatchers("/cmsexam/api/**").denyAll()   
+	          //  .antMatchers("/cmsexam/api/**").denyAll()   
 
             
            
