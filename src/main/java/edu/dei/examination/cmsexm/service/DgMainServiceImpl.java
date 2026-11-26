@@ -128,8 +128,8 @@ public class DgMainServiceImpl implements DgMainService {
 		        String file_course_name="";
 		        String branch="";
 		        String spec="";
-
-		        String session="";
+		        String entityName="";
+                String session="";
 		        String sem="";
 		        String roman="";
 				try {
@@ -147,6 +147,11 @@ public class DgMainServiceImpl implements DgMainService {
 					roman=getroman(sem);
 					branch= (String) studentstaticdata.get(0).get("branch");
 					spec= (String) studentstaticdata.get(0).get("specialization");
+					entityName = (String) studentstaticdata.get(0).get("entity_name");
+					
+					branch = sanitizeFilePart(branch);
+					spec = sanitizeFilePart(spec);
+					entityName = sanitizeFolderName(entityName);
 					
 					maxsubject=theDgExtractRepository.getmaxsubject(pck, pckobj.getSemesterStartDate());
 					
@@ -159,11 +164,22 @@ public class DgMainServiceImpl implements DgMainService {
 					 if (!sessionDir.exists()) {
 						 sessionDir.mkdirs();
 					 }
+					 
+					// Create entity/faculty directory inside session added on 23062026
+					 File entityDir = new File(sessionDir + File.separator + entityName);
+					 if (!entityDir.exists()) {
+					     entityDir.mkdirs();
+					 }
 	 
 					 // Create CSV file path by pragya
-					 File file = new File(sessionDir + File.separator + session + "_" +
-							 pckobj.getProgramCourseKey() + "_" + file_course_name + "_" + branch + "_" +
-							 spec + "_" + roman + "_" + "Run_" + rundt + ".csv");
+				//	 File file = new File(sessionDir + File.separator + session + "_" +
+				//			 pckobj.getProgramCourseKey() + "_" + file_course_name + "_" + branch + "_" +
+				//			 spec + "_" + roman + "_" + "Run_" + rundt + ".csv");
+					 
+					// Create CSV inside dglocker/session/entity_name/ added on 23062026
+					 File file = new File(entityDir + File.separator + session + "_" +
+					         pckobj.getProgramCourseKey() + "_" + file_course_name + "_" + branch + "_" +
+					         spec + "_" + roman + "_" + "Run_" + rundt + ".csv");
 
 		        // create CSVWriter object filewriter object as parameter 
 					
@@ -219,6 +235,26 @@ public class DgMainServiceImpl implements DgMainService {
 		
 	}
 	
+	private String sanitizeFolderName(String name) {
+	    if (name == null || name.trim().isEmpty()) {
+	        return "UNKNOWN_ENTITY";
+	    }
+
+	    return name.trim()
+	            .replaceAll("[\\\\/:*?\"<>|]", "_")
+	            .replaceAll("\\s+", "_");
+	}
+
+	private String sanitizeFilePart(String value) {
+	    if (value == null || value.trim().isEmpty()) {
+	        return "NA";
+	    }
+
+	    return value.trim()
+	            .replaceAll("[\\\\/:*?\"<>|]", "_")
+	            .replaceAll("\\s+", "_");
+	}
+	
 	private String getroman(String sem) {
 	// TODO Auto-generated method stub
 		
@@ -239,8 +275,8 @@ public class DgMainServiceImpl implements DgMainService {
 }
 
 	private void writecsvheader(CSVWriter writer,List <DgFormat> format, int totsub){
-		String[] tempheader = new String[15];
-		String[] header = new String[15];
+		String[] tempheader = new String[16];
+		String[] header = new String[16];
 		header[0]="SUB*NM";
 		header[1]="SUB*";
 		header[2]="SUB*_TH_MAX";
@@ -255,12 +291,13 @@ public class DgMainServiceImpl implements DgMainService {
 		header[11]="SUB*_CREDIT";
 		header[12]="SUB*_CREDIT_POINTS";
 		header[13]="SUB*_REMARKS";
-		header[14]="SUB*_CREDIT_ELIGIBILITY";
+		header[14]="SUB*_TOT_WRDS";
+	    header[15]="SUB*_CREDIT_ELIGIBILITY";
 			
 		
           		
 		String keyfield;
-		String[]  arr= new String[format.size()+totsub*15-1];
+		String[]  arr= new String[format.size()+totsub*16-1];
 		int n=-1;
 		System.out.println("Array length="+arr.length);
 		Iterator <DgFormat> fmt = format.iterator();
@@ -305,11 +342,11 @@ public class DgMainServiceImpl implements DgMainService {
 	private void writecsv(Map<String, Object> student,List <DgFormat> format,
 			CSVWriter writer,List<Map<String, Object>> subjects,Map<String, Object> creditpoint,int totsub,String roman) {
 		String keyfield;
-		String[]  arr= new String[format.size()+(totsub*15)];
+		String[]  arr= new String[format.size()+(totsub*16)];
 		//String[]  arr= new String[300];
 		Iterator <DgFormat> fmt = format.iterator();
 		int subcount = totsub-subjects.size();
-		subcount= subcount*15;
+		subcount= subcount*16;
 		int n=-1;
         		
 		for (int i =0;i<format.size();i++) {
@@ -343,7 +380,7 @@ public class DgMainServiceImpl implements DgMainService {
 				n++;
 				arr[n]=(String)stdsubjects.get("creditpoint");
 				
-				for(int j=0;j<2;j++) {
+				for(int j=0;j<3;j++) {
 					n++;
 					arr[n]="";
 					
