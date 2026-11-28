@@ -127,7 +127,7 @@ public class AuthTokenFilter extends OncePerRequestFilter {
                     path, "/cmsexam/phd/api", "/phd/api");
 
             boolean examPath = isApplicationPath(
-                    path, "/cmsexam/exam/api", "/exam/api/test");
+                    path, "/cmsexam/exam/api", "/exam/api");
 
             // Shared authentication endpoints are allowed here.
             // Other shared endpoints must be explicitly classified.

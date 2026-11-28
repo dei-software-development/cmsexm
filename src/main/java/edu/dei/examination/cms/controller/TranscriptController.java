@@ -15,7 +15,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @RestController
-@RequestMapping("/exam/api/test")
+//@RequestMapping("/api/test")
+@RequestMapping("/exam/api")
 public class TranscriptController {
 
     @Autowired

@@ -100,7 +100,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	 @Bean
 	    public CorsConfigurationSource corsConfigurationSource() {
 	        CorsConfiguration config = new CorsConfiguration();
-	        config.setAllowedOrigins(Arrays.asList("http://localhost:4200","http://localhost:4300")); // Angular
+	        config.setAllowedOrigins(Arrays.asList("http://localhost:4200/","http://localhost:4300")); // Angular
 	        config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
 	        config.setAllowedHeaders(Arrays.asList("*"));
 	        config.setAllowCredentials(true); // if using cookies / Authorization header
@@ -120,9 +120,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		
-		http.cors(cors -> cors.configurationSource(corsConfigurationSource())) 
-		//http.cors().and().csrf().disable()
-		.csrf().disable()
+		//http.cors(cors -> cors.configurationSource(corsConfigurationSource()))
+		http.cors().and().csrf().disable()
+		//.csrf().disable()
 		//http.cors().and()
 			.exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
 			.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
